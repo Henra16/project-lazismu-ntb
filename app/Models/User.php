@@ -6,6 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use App\Models\Donation;
+use App\Models\Campaign;
+use App\Models\ActivityLog;
 
 class User extends Authenticatable
 {
@@ -18,10 +22,22 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'uuid',
         'name',
         'email',
+        'phone',
         'password',
+        'role',
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::creating(function ($user) {
+            $user->uuid = Str::uuid();
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +60,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
+
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class, 'created_by');
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(ActivityLog::class);
     }
 }
