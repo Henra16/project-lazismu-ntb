@@ -66,4 +66,5 @@ Route::middleware('auth')->group(function () {
 Route::get('/cek-donasi', [TrackingController::class, 'check'])->name('donasi.check');
 Route::post('/cek-donasi', [TrackingController::class, 'search'])->name('donasi.search');
 Route::get('/donasi/track/{uuid}', [TrackingController::class, 'track'])->name('donasi.track');
+Route::get('/donasi/track/{uuid}/status', [TrackingController::class, 'status'])->name('donasi.status');
 Route::post('/donasi/track/{uuid}/cancel', [TrackingController::class, 'cancel'])->name('donasi.cancel');

@@ -787,18 +787,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ===== UPDATE SUMMARY =====
-    // Fee Tripay: QRIS 0.5%, VA BRI Rp 1.500, VA BNI Rp 2.500, VA BCA Rp 3.500, VA BSI Rp 2.500
+    // Fee: QRIS Gratis, VA semua Rp 500, Transfer Manual Rp 0
     function updateSummary() {
         let adminFee = 0;
 
         if (selectedPayment === 'qris') {
-            adminFee = Math.ceil(selectedAmount * 0.005); // Tripay QRIS 0.5%
-        } else if (selectedPayment === 'va_bri') {
-            adminFee = 1500;
-        } else if (selectedPayment === 'va_bni' || selectedPayment === 'va_bsi') {
-            adminFee = 2500;
-        } else if (selectedPayment === 'va_bca') {
-            adminFee = 3500;
+            adminFee = 0; // QRIS Gratis
+        } else if (['va_bri', 'va_bni', 'va_bsi', 'va_bca'].includes(selectedPayment)) {
+            adminFee = 500; // Virtual Account flat Rp 500
+        } else if (selectedPayment === 'transfer_manual') {
+            adminFee = 0; // Transfer Manual Gratis
         }
 
         const total = selectedAmount + adminFee;

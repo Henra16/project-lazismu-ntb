@@ -25,7 +25,9 @@ class UserForm
                     ->email()
                     ->required(),
                 TextInput::make('phone')
-                    ->tel(),
+                    ->label('No. HP')
+                    ->tel()
+                    ->placeholder('Contoh: 08123456789'),
                 TextInput::make('avatar'),
                 TextInput::make('password')
                     ->password()

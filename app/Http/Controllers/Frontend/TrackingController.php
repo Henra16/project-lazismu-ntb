@@ -88,4 +88,27 @@ class TrackingController extends Controller
         return redirect()->route('donasi.track', $donation->uuid)
             ->with('success', 'Transaksi berhasil dibatalkan.');
     }
+    public function status($uuid)
+    {
+        $donation = Donation::with(['program', 'transaction'])->where('uuid', $uuid)->first();
+
+        if (!$donation) {
+            return response()->json(['status' => 'not_found'], 404);
+        }
+
+        $receipt = null;
+        if ($donation->status === 'paid') {
+            $receipt = [
+                'donor_name' => $donation->donor_name,
+                'program' => $donation->program?->title ?? '-',
+                'total' => 'Rp ' . number_format($donation->amount + ($donation->admin_fee ?? 0), 0, ',', '.'),
+            ];
+        }
+
+        return response()->json([
+            'status' => $donation->status,
+            'paid_at' => $donation->paid_at ? $donation->paid_at->format('d M Y, H:i') : null,
+            'receipt' => $receipt,
+        ]);
+    }
 }

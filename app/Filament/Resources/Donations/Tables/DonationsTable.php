@@ -41,9 +41,12 @@ class DonationsTable
                     ->toggleable(isToggledHiddenByDefault: false),
 
                 TextColumn::make('donor_phone')
-                    ->label('Telepon')
+                    ->label('No. HP Donatur')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->copyable()
+                    ->copyMessage('Nomor HP tersalin!')
+                    ->icon('heroicon-o-phone')
+                    ->toggleable(isToggledHiddenByDefault: false),
 
                 TextColumn::make('amount')
                     ->label('Jumlah')

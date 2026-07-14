@@ -43,11 +43,11 @@ class TripayService
     public static function calculateAdminFee(string $method, int $amount): int
     {
         return match ($method) {
-            'qris'   => (int) ceil($amount * 0.005),  // 0.5%
-            'va_bri' => 1500,
-            'va_bni' => 2500,
-            'va_bca' => 3500,
-            'va_bsi' => 2500,
+            'qris'   => 0,    // Gratis
+            'va_bri' => 500,  // Flat Rp 500
+            'va_bni' => 500,  // Flat Rp 500
+            'va_bca' => 500,  // Flat Rp 500
+            'va_bsi' => 500,  // Flat Rp 500
             default  => 0,
         };
     }

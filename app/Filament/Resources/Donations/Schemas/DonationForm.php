@@ -33,8 +33,9 @@ class DonationForm
                     ->email()
                     ->required(),
                 TextInput::make('donor_phone')
-                    ->label('No. Telepon Donatur')
-                    ->tel(),
+                    ->label('No. HP Donatur')
+                    ->tel()
+                    ->placeholder('Contoh: 08123456789'),
                 TextInput::make('amount')
                     ->label('Jumlah Donasi')
                     ->required()

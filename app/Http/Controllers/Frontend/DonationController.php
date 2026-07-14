@@ -298,9 +298,9 @@ class DonationController extends Controller
         $donation = Donation::where('uuid', $uuid)->with('program')->firstOrFail();
 
         $bankDetails = [
-            'bank_name'      => env('MANUAL_BANK_NAME', 'Bank NTB Syariah'),
-            'account_number' => env('MANUAL_BANK_ACCOUNT', '504-02-12345-67-8'),
-            'account_name'   => env('MANUAL_BANK_RECIPIENT', 'LAZISMU NTB'),
+            'bank_name'      => env('MANUAL_BANK_NAME', 'Bank Muamalat'),
+            'account_number' => env('MANUAL_BANK_ACCOUNT', '7210063046'),
+            'account_name'   => env('MANUAL_BANK_RECIPIENT', 'Lazis MUHAMMADIYAH'),
         ];
 
         return view('frontend.donasi.manual', compact('donation', 'bankDetails'));

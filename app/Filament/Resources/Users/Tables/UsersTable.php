@@ -25,8 +25,12 @@ class UsersTable
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('phone')
-                    ->label('Nomor Telepon')
-                     ->searchable(),
+                    ->label('No. HP')
+                    ->searchable()
+                    ->copyable()
+                    ->copyMessage('Nomor HP tersalin!')
+                    ->icon('heroicon-o-phone')
+                    ->placeholder('Belum diisi'),
                 TextColumn::make('avatar')
                     ->label('Avatar')
                     ->searchable(),
