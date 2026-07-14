@@ -1,0 +1,278 @@
+{{-- ============================================
+    HEADER / NAVBAR - Lazismu NTB
+============================================= --}}
+<nav class="navbar navbar-expand-lg navbar-lazismu" id="navbar-main">
+    <div class="container">
+        {{-- Logo --}}
+        <a class="navbar-brand" href="{{ url('/') }}">
+            <img src="{{ asset('images/lazismu-logo.png') }}" alt="Lazismu NTB" class="img-fluid" />
+        </a>
+
+        {{-- Mobile Toggle --}}
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMain" aria-controls="navbarMain"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {{-- Nav Links --}}
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('/') && !request()->has('section') ? 'active' : '' }}"
+                       href="{{ url('/') }}#hero-section" id="nav-beranda">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/') }}#tentang-section" id="nav-tentang">Tentang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/') }}#program-section" id="nav-program">Program</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/') }}#berita-section" id="nav-berita">Berita</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/') }}#laporan-section" id="nav-laporan">Laporan</a>
+                </li>
+            </ul>
+
+            {{-- Action Buttons --}}
+            <div class="navbar-actions d-flex align-items-center gap-2">
+                <a href="{{ url('/cek-donasi') }}" class="btn btn-orange-outline" id="btn-check-donation-nav">
+                    Cek Donasi
+                </a>
+                <a href="{{ url('/donasi') }}" class="btn btn-orange" id="btn-donasi-nav">
+                    Donasi Sekarang
+                </a>
+
+                @auth
+                    {{-- Profile Dropdown --}}
+                    <div class="dropdown" id="profile-dropdown-wrap">
+                        <button class="profile-trigger dropdown-toggle" type="button"
+                                id="profileDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            @if(auth()->user()->avatar)
+                                <img src="{{ Storage::url(auth()->user()->avatar) }}"
+                                     alt="Foto Profil" class="profile-avatar-img">
+                            @else
+                                <div class="profile-avatar-initial">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <span class="profile-name d-none d-lg-inline">
+                                {{ explode(' ', auth()->user()->name)[0] }}
+                            </span>
+                            <i class="fas fa-chevron-down profile-caret"></i>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu"
+                            aria-labelledby="profileDropdown">
+                            {{-- Header info --}}
+                            <li class="dropdown-header-info">
+                                <div class="d-flex align-items-center gap-2 p-3 pb-2">
+                                    @if(auth()->user()->avatar)
+                                        <img src="{{ Storage::url(auth()->user()->avatar) }}"
+                                             alt="Avatar" class="dropdown-avatar">
+                                    @else
+                                        <div class="dropdown-avatar-initial">
+                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <div class="dropdown-user-name">{{ auth()->user()->name }}</div>
+                                        <div class="dropdown-user-email">{{ auth()->user()->email }}</div>
+                                    </div>
+                                </div>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+
+                            {{-- Menu items --}}
+                            @php
+                                $pendingDonation = auth()->user()->donations()->where('status', 'pending')->latest()->first();
+                            @endphp
+                            @if($pendingDonation)
+                                <li class="dropdown-notification px-3 py-2">
+                                    <div class="notification-card bg-light rounded-2">
+                                        <div class="d-flex flex-column gap-2">
+                                            <div class="fw-semibold">Ada transaksi donasi yang belum selesai</div>
+                                            <div class="text-secondary small">Selesaikan transaksi donasi Anda dengan meninjau detail donasi pending.</div>
+                                            <a href="{{ route('donasi.track', $pendingDonation->uuid) }}" class="btn btn-sm btn-primary w-100">
+                                                Selesaikan
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                            @endif
+                            <li>
+                                <a class="dropdown-item profile-menu-item" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user-edit"></i> Edit Profil
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item profile-menu-item" href="{{ route('donasi.history') }}">
+                                    <i class="fas fa-history"></i> Riwayat Donasi
+                                </a>
+                            </li>
+                            @if(auth()->user()->role === 'admin')
+                            <li>
+                                <a class="dropdown-item profile-menu-item" href="{{ url('/admin') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard Admin
+                                </a>
+                            </li>
+                            @endif
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item profile-menu-item text-danger">
+                                        <i class="fas fa-sign-out-alt"></i> Keluar
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @else
+                    {{-- Guest: Show Login button --}}
+                    <a href="{{ route('login') }}" class="btn btn-login" id="btn-login-nav">
+                        <i class="fas fa-user-circle"></i> Login
+                    </a>
+                @endauth
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+/* ── Profile Trigger Button ── */
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 30px;
+    padding: 5px 12px 5px 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+.profile-trigger:hover,
+.profile-trigger.show {
+    border-color: #F7941D;
+    background: #FFF8E6;
+}
+.profile-trigger::after { display: none; } /* remove default BS caret */
+
+.profile-avatar-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #F7941D;
+}
+.profile-avatar-initial {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #F7941D;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.profile-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.profile-caret {
+    font-size: 0.65rem;
+    color: #999;
+    transition: transform 0.2s;
+}
+.profile-trigger.show .profile-caret { transform: rotate(180deg); }
+
+/* ── Dropdown Menu ── */
+.profile-dropdown-menu {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 0;
+    min-width: 240px;
+    overflow: hidden;
+    margin-top: 8px !important;
+}
+
+.dropdown-user-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.2;
+}
+.dropdown-user-email {
+    font-size: 0.72rem;
+    color: #999;
+    margin-top: 1px;
+}
+.dropdown-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #F7941D;
+    flex-shrink: 0;
+}
+.dropdown-avatar-initial {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #F7941D;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-menu-item {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #444;
+    transition: background 0.15s;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+}
+.profile-menu-item i {
+    width: 16px;
+    text-align: center;
+    color: #F7941D;
+}
+.profile-menu-item.text-danger i { color: #dc3545; }
+.profile-menu-item:hover {
+    background: #FFF8E6;
+    color: #F7941D;
+}
+.profile-menu-item.text-danger:hover {
+    background: #fff0f0;
+    color: #dc3545;
+}
+</style>

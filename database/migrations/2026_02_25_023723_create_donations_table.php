@@ -17,9 +17,9 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()
                   ->constrained('users')
                   ->nullOnDelete();
-            $table->foreignId('campaign_id')
-                  ->constrained('campaigns')
-                  ->cascadeOnDelete();
+            $table->foreignId('program_id')
+                ->constrained('programs')
+                ->cascadeOnDelete();
 
             $table->string('donor_name', 100);
             $table->string('donor_email', 150);
@@ -38,7 +38,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->index(['campaign_id', 'status']);
+            $table->index(['program_id', 'status']);
             $table->index('created_at');
         });
     }

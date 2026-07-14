@@ -1,0 +1,2 @@
+<img src="<?php echo e(asset('images/lazismu-logo.png')); ?>" alt="Lazismu NTB Logo" <?php echo e($attributes); ?> />
+<?php /**PATH C:\Users\ASUS\Herd\project-lazismu-ntb\resources\views/components/application-logo.blade.php ENDPATH**/ ?>
