@@ -1,0 +1,2 @@
+# Tolak semua akses publik langsung ke folder laravel
+Deny from all
