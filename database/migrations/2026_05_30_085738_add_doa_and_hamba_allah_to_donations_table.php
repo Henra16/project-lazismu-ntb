@@ -11,10 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('donations', function (Blueprint $table) {
-            $table->text('doa')->nullable()->after('user_agent')->comment('Doa atau pesan dukungan dari donatur');
-            $table->boolean('is_anonymous')->default(false)->after('doa')->comment('Sembunyikan nama sebagai Hamba Allah');
-        });
+        if (!Schema::hasTable('donations')) {
+            return;
+        }
+
+        if (!Schema::hasColumn('donations', 'doa')) {
+            Schema::table('donations', function (Blueprint $table) {
+                $table->text('doa')->nullable()->after('user_agent')->comment('Doa atau pesan dukungan dari donatur');
+            });
+        }
+
+        if (!Schema::hasColumn('donations', 'is_anonymous')) {
+            Schema::table('donations', function (Blueprint $table) {
+                $table->boolean('is_anonymous')->default(false)->after('doa')->comment('Sembunyikan nama sebagai Hamba Allah');
+            });
+        }
     }
 
     /**
@@ -23,7 +34,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('donations', function (Blueprint $table) {
-            $table->dropColumn(['doa', 'is_anonymous']);
+            $table->dropColumn(array_filter(['doa' => Schema::hasColumn('donations', 'doa'), 'is_anonymous' => Schema::hasColumn('donations', 'is_anonymous')]));
         });
     }
 };

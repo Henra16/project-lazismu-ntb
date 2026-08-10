@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('payment_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('donation_id')
-                  ->constrained('donations')
-                  ->cascadeOnDelete();
+            // FK ke donations ditambahkan di migration terpisah setelah tabel donations dibuat
+            // (donations dibuat di 2026_05_18, sedangkan migration ini 2026_02_25)
+            $table->unsignedBigInteger('donation_id')->nullable();
 
             $table->string('gateway_name', 50)->default('midtrans');
             $table->string('transaction_id', 100)->nullable();
@@ -32,6 +32,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('transaction_status');
+            $table->index('donation_id');
         });
     }
 

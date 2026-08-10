@@ -13,10 +13,16 @@ class NewsSeeder extends Seeder
      */
     public function run(): void
     {
-        // Truncate existing news
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Truncate existing news in a database-agnostic way.
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+
         News::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         $news = [
             [

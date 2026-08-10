@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('donations', function (Blueprint $table) {
-            $table->decimal('admin_fee', 15, 2)->default(0)->after('amount');
-        });
+        if (!Schema::hasTable('donations')) {
+            return;
+        }
+
+        if (!Schema::hasColumn('donations', 'admin_fee')) {
+            Schema::table('donations', function (Blueprint $table) {
+                $table->decimal('admin_fee', 15, 2)->default(0)->after('amount');
+            });
+        }
     }
 
     /**
@@ -21,8 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('donations', function (Blueprint $table) {
-            $table->dropColumn('admin_fee');
-        });
+        if (Schema::hasColumn('donations', 'admin_fee')) {
+            Schema::table('donations', function (Blueprint $table) {
+                $table->dropColumn('admin_fee');
+            });
+        }
     }
 };

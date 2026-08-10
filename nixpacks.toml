@@ -1,10 +1,20 @@
 [phases.setup]
 nixPkgs = [
-    'php82', 
-    'php82Packages.composer', 
+    'php82',
+    'php82Packages.composer',
     'php82Extensions.intl',
     'php82Extensions.zip',
     'php82Extensions.gd',
+    'php82Extensions.curl',
+    'php82Extensions.mbstring',
+    'php82Extensions.pdo',
+    'php82Extensions.pdo_mysql',
+    'php82Extensions.tokenizer',
+    'php82Extensions.ctype',
+    'php82Extensions.xml',
+    'php82Extensions.bcmath',
+    'php82Extensions.fileinfo',
+    'php82Extensions.pcntl',
     'nodejs_20'
 ]
 
@@ -12,10 +22,12 @@ nixPkgs = [
 cmds = [
     "composer install --no-dev --optimize-autoloader",
     "npm ci",
-    "npm run build",
-    "php artisan storage:link"
+    "npm run build"
 ]
 
 [start]
-# Command start Railway biasanya mengatur variabel environment $PORT otomatis
-cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
+# storage:link dijalankan saat start bukan build (build container = ephemeral)
+# config:cache, route:cache, view:cache untuk performa optimal
+# migrate --force untuk auto-migrate saat deploy
+cmd = "php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+

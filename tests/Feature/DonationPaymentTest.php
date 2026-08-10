@@ -3,11 +3,6 @@
 use App\Models\Program;
 use App\Models\Donation;
 use App\Models\PaymentTransaction;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\TestCase;
-
-uses(TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
     config(['midtrans.server_key' => 'SB-Mid-server-TESTKEY123']);

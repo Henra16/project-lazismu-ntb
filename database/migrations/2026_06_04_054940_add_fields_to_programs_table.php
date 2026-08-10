@@ -11,21 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('programs', function (Blueprint $table) {
-            $table->date('deadline')
-              ->nullable()
-              ->after('target_amount');
+        if (!Schema::hasColumn('programs', 'deadline')) {
+            Schema::table('programs', function (Blueprint $table) {
+                $table->date('deadline')->nullable()->after('target_amount');
+            });
+        }
 
-        $table->enum('status', ['draft', 'active', 'closed'])
-              ->default('draft')
-              ->after('deadline');
+        if (!Schema::hasColumn('programs', 'status')) {
+            Schema::table('programs', function (Blueprint $table) {
+                $table->enum('status', ['draft', 'active', 'closed'])->default('draft')->after('deadline');
+            });
+        }
 
-        $table->foreignId('created_by')
-              ->nullable()
-              ->after('status')
-              ->constrained('users')
-              ->nullOnDelete();
-        });
+        if (!Schema::hasColumn('programs', 'created_by')) {
+            Schema::table('programs', function (Blueprint $table) {
+                $table->foreignId('created_by')->nullable()->after('status')->constrained('users')->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -34,13 +36,17 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('programs', function (Blueprint $table) {
-            $table->dropForeign(['created_by']);
+            if (Schema::hasColumn('programs', 'created_by')) {
+                $table->dropForeign(['created_by']);
+            }
+        });
 
-        $table->dropColumn([
-            'deadline',
-            'status',
-            'created_by'
-        ]);
+        Schema::table('programs', function (Blueprint $table) {
+            $table->dropColumn(array_filter([
+                'deadline' => Schema::hasColumn('programs', 'deadline'),
+                'status' => Schema::hasColumn('programs', 'status'),
+                'created_by' => Schema::hasColumn('programs', 'created_by'),
+            ]));
         });
     }
 };
